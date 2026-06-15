@@ -28,7 +28,13 @@ export function renderHero(): string {
         </button>
       </div>
       <div class="hero__media">
-        <img class="hero__image" src="/phone.png" alt="Vorschau einer Umfrage auf einem Smartphone" />
+        <div class="hero__phone">
+          <img class="hero__image" src="/phone.png" alt="Vorschau einer Umfrage auf einem Smartphone" />
+          <img class="hero__icon hero__icon--bubble" src="/typing%20bubble.svg" alt="" aria-hidden="true" />
+          <img class="hero__icon hero__icon--question" src="/Questin%20mark.svg" alt="" aria-hidden="true" />
+          <img class="hero__icon hero__icon--star" src="/star.svg" alt="" aria-hidden="true" />
+          <img class="hero__icon hero__icon--check" src="/check.svg" alt="" aria-hidden="true" />
+        </div>
       </div>
     </section>
   `;

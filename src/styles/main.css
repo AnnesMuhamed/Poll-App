@@ -48,9 +48,9 @@ h4 {
 }
 
 .page {
-  max-width: var(--max-width);
+  width: min(1218px, 100% - 48px);
   margin: 0 auto;
-  padding: 24px 40px 80px;
+  padding: 24px 0 80px;
 }
 
 /* Header */
@@ -110,11 +110,74 @@ h4 {
   align-items: center;
 }
 
-.hero__image {
-  display: block;
+.hero__phone {
+  position: relative;
   width: 100%;
   max-width: 440px;
+}
+
+.hero__image {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
   height: auto;
+}
+
+.hero__icon {
+  position: absolute;
+  z-index: 2;
+  display: block;
+  pointer-events: none;
+  transition: transform 0.45s ease-out;
+}
+
+.hero__icon--bubble {
+  width: 32%;
+  top: 22%;
+  left: 12%;
+  transform-origin: center;
+}
+
+.hero__icon--question {
+  width: 20%;
+  top: -1%;
+  right: 5%;
+  transform: rotate(14deg);
+  transform-origin: center;
+}
+
+.hero__icon--star {
+  width: 22%;
+  bottom: 3%;
+  left: 0;
+  transform: rotate(-14deg);
+  transform-origin: center;
+}
+
+.hero__icon--check {
+  z-index: 0;
+  width: 22%;
+  top: 60%;
+  right: 12%;
+}
+
+@media (hover: hover) and (min-width: 901px) {
+  .hero__phone:hover .hero__icon--bubble {
+    transform: scale(1.55);
+  }
+
+  .hero__phone:hover .hero__icon--question {
+    transform: translate(-22px, 6px) rotate(0deg);
+  }
+
+  .hero__phone:hover .hero__icon--star {
+    transform: translate(-10px, 8px) rotate(0deg);
+  }
+
+  .hero__phone:hover .hero__icon--check {
+    transform: translate(60px, 30px) scale(1.15);
+  }
 }
 
 /* Buttons */
@@ -186,6 +249,11 @@ h4 {
 }
 
 /* Surveys section */
+.surveys {
+  max-width: 1046px;
+  margin: 0 auto;
+}
+
 .surveys__title {
   width: 1042px;
   max-width: 100%;
@@ -233,6 +301,11 @@ h4 {
   border-top-right-radius: 80px;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
   cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.ending-card:hover {
+  background: #f4e9fb;
 }
 
 .ending-card:focus-visible {
@@ -302,6 +375,11 @@ h4 {
   font-weight: 400;
   font-size: 16px;
   line-height: 100%;
+  transition: background 0.2s ease;
+}
+
+.tabs__tab:not(.tabs__tab--active):hover {
+  background: #ffcfa1;
 }
 
 .tabs__tab--active {
@@ -357,6 +435,11 @@ h4 {
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
   cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.list-card:hover {
+  background: #d9d9d929;
 }
 
 .list-card__category {
