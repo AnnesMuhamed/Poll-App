@@ -63,8 +63,12 @@ function closeSortMenus(): void {
  */
 function selectSortItem(item: HTMLElement): void {
   const menu: Element | null = item.closest(".sort-menu");
-  const label: Element | null | undefined = menu?.querySelector(".sort__label");
-  if (label) label.textContent = item.textContent;
+  const selected: Element | null | undefined =
+    menu?.querySelector("[data-selected]");
+  if (selected) {
+    selected.textContent = item.textContent;
+    selected.removeAttribute("hidden");
+  }
   menu
     ?.querySelectorAll(".sort-menu__item--active")
     .forEach((el: Element): void => el.classList.remove("sort-menu__item--active"));
@@ -108,7 +112,9 @@ function addQuestion(): void {
   const container: Element | null = document.querySelector("[data-questions]");
   if (!container) return;
   const next: number = container.querySelectorAll(".question").length + 1;
-  container.insertAdjacentHTML("beforeend", buildQuestion(next));
+  const button: Element | null = container.querySelector(".add-question");
+  if (button) button.insertAdjacentHTML("beforebegin", buildQuestion(next));
+  else container.insertAdjacentHTML("beforeend", buildQuestion(next));
 }
 
 /**
@@ -138,16 +144,29 @@ function deleteField(trash: HTMLElement): void {
 }
 
 /**
- * Removes a question block, keeping at least one and renumbering the rest.
+ * Removes a question block, or clears the first one so at least one
+ * question always remains. Renumbers the remaining questions.
  * @param trash The clicked trash button inside the question.
  */
 function removeQuestion(trash: HTMLElement): void {
   const container: Element | null = document.querySelector("[data-questions]");
   const block: Element | null = trash.closest(".question");
   if (!container || !block) return;
-  if (container.querySelectorAll(".question").length <= 1) return;
+  if (block === container.querySelector(".question")) return clearInputs(block);
   block.remove();
   renumberQuestions(container);
+}
+
+/**
+ * Clears the value of every input and textarea inside the given element.
+ * @param scope The element whose fields are cleared.
+ */
+function clearInputs(scope: Element): void {
+  scope
+    .querySelectorAll("input, textarea")
+    .forEach((field: Element): void => {
+      (field as HTMLInputElement | HTMLTextAreaElement).value = "";
+    });
 }
 
 /**

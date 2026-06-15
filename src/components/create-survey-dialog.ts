@@ -3,6 +3,8 @@
  * is clicked. Contains the survey form with questions and answers.
  */
 
+import { CATEGORIES } from "../data/categories";
+
 /** Inline plus icon reused by the "Add" buttons. */
 const PLUS_ICON: string = `
   <svg class="icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
@@ -10,14 +12,6 @@ const PLUS_ICON: string = `
     <path d="M12 8v8M8 12h8" />
   </svg>
 `;
-
-/** Sample categories offered in the "Choose category" dropdown. */
-const CATEGORIES: string[] = [
-  "Team activities",
-  "Health & Wellness",
-  "Gaming & Entertainment",
-  "Other",
-];
 
 /**
  * Renders the complete create-survey modal (hidden by default).
@@ -36,10 +30,12 @@ export function renderCreateSurveyDialog(): string {
             </div>
             <div class="modal__col">
               ${renderDescribingField()}
-              ${renderAddQuestionButton()}
             </div>
           </div>
-          <div class="questions" data-questions>${buildQuestion(1)}</div>
+          <div class="questions" data-questions>
+            ${buildQuestion(1)}
+            ${renderAddQuestionButton()}
+          </div>
         </div>
         ${renderFooter()}
       </div>
@@ -113,6 +109,7 @@ function renderCategoryMenu(): string {
         <span class="sort__chevron" aria-hidden="true">▾</span>
       </button>
       <ul class="sort-menu__list" role="listbox" hidden>${renderCategoryItems()}</ul>
+      <span class="sort-menu__selected" data-selected hidden></span>
     </div>
   `;
 }
