@@ -1,13 +1,11 @@
 /**
- * Entry point of the Poll-App.
- * The actual application logic will be added step by step during
- * development (see docs/CHECKLIST.md and docs/CONVENTIONS.md).
+ * Entry point of the Poll-App. Renders the home screen into the DOM.
  */
 
 import "./styles/main.css";
+import { renderHome } from "./components/home";
+import { requireElement } from "./utils/dom";
 
-const APP_ROOT = document.getElementById("app");
+const APP_ROOT: HTMLElement = requireElement("app");
 
-if (APP_ROOT !== null) {
-  APP_ROOT.innerHTML = "<h1>Poll-App</h1>";
-}
+APP_ROOT.innerHTML = renderHome();
