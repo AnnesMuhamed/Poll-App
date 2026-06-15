@@ -7,6 +7,7 @@ import { renderAppHeader } from "./app-header";
 import { renderHero } from "./hero";
 import { renderEndingSoon } from "./ending-soon";
 import { renderSurveyList } from "./survey-list";
+import { renderCreateSurveyDialog } from "./create-survey-dialog";
 
 /**
  * Renders the entire home screen markup.
@@ -24,6 +25,7 @@ export function renderHome(): string {
           ${renderSurveyList(getActiveSurveys())}
         </section>
       </main>
+      ${renderCreateSurveyDialog()}
     </div>
   `;
 }
