@@ -24,9 +24,46 @@ function activateTab(tab: HTMLElement): void {
   });
 }
 
+/**
+ * Opens or closes the dropdown that belongs to the given sort button.
+ * @param button The sort toggle button.
+ */
+function toggleSortMenu(button: HTMLElement): void {
+  const list: Element | null | undefined = button
+    .closest(".sort-menu")
+    ?.querySelector(".sort-menu__list");
+  if (!list) return;
+  const isOpen: boolean = button.getAttribute("aria-expanded") === "true";
+  button.setAttribute("aria-expanded", String(!isOpen));
+  list.toggleAttribute("hidden", isOpen);
+}
+
+/**
+ * Closes every open sort dropdown on the page.
+ */
+function closeSortMenus(): void {
+  document
+    .querySelectorAll(".sort-menu__list:not([hidden])")
+    .forEach((list: Element): void => {
+      list.setAttribute("hidden", "");
+      list.closest(".sort-menu")?.querySelector(".sort")
+        ?.setAttribute("aria-expanded", "false");
+    });
+}
+
 APP_ROOT.addEventListener("click", (event: MouseEvent): void => {
-  const target: HTMLElement | null = (event.target as HTMLElement).closest(
-    ".tabs__tab",
+  const element: HTMLElement = event.target as HTMLElement;
+  const tab: HTMLElement | null = element.closest(".tabs__tab");
+  if (tab) {
+    activateTab(tab);
+    return;
+  }
+  const sortToggle: HTMLElement | null = element.closest(
+    '[data-action="toggle-sort"]',
   );
-  if (target) activateTab(target);
+  if (sortToggle) {
+    toggleSortMenu(sortToggle);
+    return;
+  }
+  closeSortMenus();
 });
