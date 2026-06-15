@@ -12,3 +12,25 @@ export interface Survey {
   title: string;
   endsInDays: number;
 }
+
+/** A single answer option of a created survey. */
+export interface CreatedAnswer {
+  letter: string;
+  text: string;
+}
+
+/** A question of a created survey including its answers. */
+export interface CreatedQuestion {
+  title: string;
+  allowMultiple: boolean;
+  answers: CreatedAnswer[];
+}
+
+/** A survey created through the create-survey dialog. */
+export interface CreatedSurvey {
+  title: string;
+  category: string;
+  endDate: string;
+  description: string;
+  questions: CreatedQuestion[];
+}

@@ -4,15 +4,46 @@
 
 import "./styles/main.css";
 import { renderHome } from "./components/home";
+import { renderSurveyView } from "./components/survey-view";
 import {
   buildQuestion,
   renderAnswerRow,
+  renderCreateSurveyDialog,
+  readCreateSurveyForm,
 } from "./components/create-survey-dialog";
+import type { CreatedSurvey } from "./types/survey";
 import { requireElement } from "./utils/dom";
 
 const APP_ROOT: HTMLElement = requireElement("app");
 
-APP_ROOT.innerHTML = renderHome();
+showHome();
+
+/**
+ * Renders the home screen and resets the page to its dark theme.
+ */
+function showHome(): void {
+  document.body.classList.remove("light-page");
+  APP_ROOT.innerHTML = renderHome();
+}
+
+/**
+ * Renders the published survey on a light page. The dialog markup is added
+ * again so the "Create survey" button keeps working from this view.
+ * @param survey The survey to display.
+ */
+function showSurvey(survey: CreatedSurvey): void {
+  document.body.classList.add("light-page");
+  APP_ROOT.innerHTML = renderSurveyView(survey) + renderCreateSurveyDialog();
+}
+
+/**
+ * Reads the dialog form, closes it and shows the created survey.
+ */
+function publishSurvey(): void {
+  const survey: CreatedSurvey = readCreateSurveyForm();
+  closeModal();
+  showSurvey(survey);
+}
 
 /**
  * Marks the given tab as active and resets its siblings.
@@ -101,7 +132,9 @@ function addAnswer(button: HTMLElement): void {
     .closest(".question")
     ?.querySelector("[data-answers]");
   if (!list) return;
-  const letter: string = String.fromCharCode(65 + list.children.length);
+  const letter: string = String.fromCharCode(
+    "A".charCodeAt(0) + list.children.length,
+  );
   list.insertAdjacentHTML("beforeend", renderAnswerRow(letter));
 }
 
@@ -135,8 +168,14 @@ function renumberQuestions(container: Element): void {
  */
 function deleteField(trash: HTMLElement): void {
   const target: string | null = trash.getAttribute("data-target");
-  if (target === "answer") return void trash.closest(".answer-row")?.remove();
-  if (target === "question") return removeQuestion(trash);
+  if (target === "answer") {
+    trash.closest(".answer-row")?.remove();
+    return;
+  }
+  if (target === "question") {
+    removeQuestion(trash);
+    return;
+  }
   const input: HTMLInputElement | null | undefined = trash
     .closest(".field")
     ?.querySelector("input, textarea");
@@ -152,7 +191,11 @@ function removeQuestion(trash: HTMLElement): void {
   const container: Element | null = document.querySelector("[data-questions]");
   const block: Element | null = trash.closest(".question");
   if (!container || !block) return;
-  if (block === container.querySelector(".question")) return clearInputs(block);
+  const isFirstQuestion: boolean = block === container.querySelector(".question");
+  if (isFirstQuestion) {
+    clearInputs(block);
+    return;
+  }
   block.remove();
   renumberQuestions(container);
 }
@@ -187,18 +230,31 @@ const ACTIONS: Record<string, (element: HTMLElement) => void> = {
   "add-question": addQuestion,
   "delete-field": deleteField,
   "toggle-check": toggleCheck,
+  publish: publishSurvey,
 };
 
 APP_ROOT.addEventListener("click", (event: MouseEvent): void => {
   const target: HTMLElement = event.target as HTMLElement;
   const tab: HTMLElement | null = target.closest(".tabs__tab");
-  if (tab) return activateTab(tab);
+  if (tab) {
+    activateTab(tab);
+    return;
+  }
   const actionEl: HTMLElement | null = target.closest("[data-action]");
   const action: string | null | undefined = actionEl?.getAttribute("data-action");
-  if (actionEl && action && ACTIONS[action]) return ACTIONS[action](actionEl);
+  if (actionEl && action && ACTIONS[action]) {
+    ACTIONS[action](actionEl);
+    return;
+  }
   const item: HTMLElement | null = target.closest(".sort-menu__item");
-  if (item) return selectSortItem(item);
-  if (target.matches("[data-modal]")) return closeModal();
+  if (item) {
+    selectSortItem(item);
+    return;
+  }
+  if (target.matches("[data-modal]")) {
+    closeModal();
+    return;
+  }
   closeSortMenus();
 });
 

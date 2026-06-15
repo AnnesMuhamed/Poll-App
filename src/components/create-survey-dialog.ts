@@ -4,6 +4,11 @@
  */
 
 import { CATEGORIES } from "../data/categories";
+import type {
+  CreatedSurvey,
+  CreatedQuestion,
+  CreatedAnswer,
+} from "../types/survey";
 
 /** Inline plus icon reused by the "Add" buttons. */
 const PLUS_ICON: string = `
@@ -201,8 +206,10 @@ export function renderAnswerRow(letter: string): string {
 function renderAddAnswerButton(): string {
   return `
     <button type="button" class="link-btn" data-action="add-answer">
-      <span>Add answer</span>
-      ${PLUS_ICON}
+      <span class="link-btn__content">
+        <span>Add answer</span>
+        ${PLUS_ICON}
+      </span>
     </button>
   `;
 }
@@ -258,4 +265,91 @@ function renderTrash(target: string, label: string): string {
   return `
     <button type="button" class="icon-btn icon-btn--trash" data-action="delete-field" data-target="${target}" aria-label="${label}"></button>
   `;
+}
+
+/**
+ * Reads the current values from the open create-survey dialog.
+ * @returns The survey data entered by the user.
+ */
+export function readCreateSurveyForm(): CreatedSurvey {
+  return {
+    title: readFieldValue("survey-name"),
+    endDate: readFieldValue("survey-end"),
+    description: readFieldValue("survey-desc"),
+    category: readSelectedCategory(),
+    questions: readQuestions(),
+  };
+}
+
+/**
+ * Reads the trimmed value of an input or textarea by its id.
+ * @param id The id of the field to read.
+ * @returns The trimmed value, or an empty string.
+ */
+function readFieldValue(id: string): string {
+  const field = document.getElementById(id) as HTMLInputElement | null;
+  return field ? field.value.trim() : "";
+}
+
+/**
+ * Reads the category chosen in the dialog dropdown.
+ * @returns The selected category, or an empty string.
+ */
+function readSelectedCategory(): string {
+  const selected: Element | null = document.querySelector(
+    "[data-modal] [data-selected]",
+  );
+  return selected?.textContent?.trim() ?? "";
+}
+
+/**
+ * Reads all questions that have a non-empty title.
+ * @returns The list of created questions.
+ */
+function readQuestions(): CreatedQuestion[] {
+  const blocks: NodeListOf<Element> =
+    document.querySelectorAll("[data-modal] .question");
+  return Array.from(blocks)
+    .map(readQuestion)
+    .filter((question: CreatedQuestion): boolean => question.title !== "");
+}
+
+/**
+ * Reads a single question block including its answers.
+ * @param block The question element to read.
+ * @returns The created question.
+ */
+function readQuestion(block: Element): CreatedQuestion {
+  const input = block.querySelector(".input") as HTMLInputElement | null;
+  const checkbox: Element | null = block.querySelector(".checkbox");
+  return {
+    title: input ? input.value.trim() : "",
+    allowMultiple: checkbox?.getAttribute("aria-pressed") === "true",
+    answers: readAnswers(block),
+  };
+}
+
+/**
+ * Reads all non-empty answers of a question block.
+ * @param block The question element to read.
+ * @returns The created answers, each with a letter.
+ */
+function readAnswers(block: Element): CreatedAnswer[] {
+  const inputs: NodeListOf<HTMLInputElement> =
+    block.querySelectorAll(".answer-row .input");
+  return Array.from(inputs)
+    .map((input: HTMLInputElement): string => input.value.trim())
+    .filter((text: string): boolean => text !== "")
+    .map(toAnswer);
+}
+
+/**
+ * Builds an answer object with a letter based on its position.
+ * @param text The answer text.
+ * @param index The zero-based position of the answer.
+ * @returns The created answer.
+ */
+function toAnswer(text: string, index: number): CreatedAnswer {
+  const letter: string = String.fromCharCode("A".charCodeAt(0) + index);
+  return { letter, text };
 }
