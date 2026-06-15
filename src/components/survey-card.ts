@@ -36,7 +36,14 @@ export function renderEndingCard(survey: Survey): string {
  */
 export function renderListCard(survey: Survey): string {
   return `
-    <article class="list-card">
+    <article
+      class="list-card"
+      role="link"
+      tabindex="0"
+      data-action="open-survey"
+      data-survey-id="${escapeHtml(survey.id)}"
+      aria-label="${escapeHtml(survey.title)} – open survey"
+    >
       <p class="list-card__category">${escapeHtml(survey.category)}</p>
       <h4 class="list-card__title">${escapeHtml(survey.title)}</h4>
       <span class="list-card__badge">${formatEndsIn(survey.endsInDays)}</span>

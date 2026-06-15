@@ -18,7 +18,13 @@ export function renderHero(): string {
           into action.
         </p>
         <button type="button" class="button button--cta" data-action="new-survey">
-          New survey
+          <span class="button__label">New survey</span>
+          <span class="button__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 8v8M8 12h8" />
+            </svg>
+          </span>
         </button>
       </div>
       <div class="hero__media">
