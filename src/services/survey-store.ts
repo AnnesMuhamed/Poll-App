@@ -274,18 +274,29 @@ export function getEndingSoonHomeSurveys(): Survey[] {
 /**
  * Returns the survey cards shown on the home screen for a filter tab.
  * @param filter The selected filter tab.
+ * @param category Optional category to filter by.
  * @returns Survey card models for the grid.
  */
-export function getHomeSurveys(filter: SurveyFilter): Survey[] {
+export function getHomeSurveys(
+  filter: SurveyFilter,
+  category?: string,
+): Survey[] {
   const created: Survey[] = loadSurveys()
     .filter((survey: StoredSurvey): boolean => survey.completed)
     .map(toSurveyCard);
-  if (filter === "past") return created.filter(isPastCard);
-  const activeCreated: Survey[] = created.filter(
-    (survey: Survey): boolean => !isPastCard(survey),
+  let surveys: Survey[];
+  if (filter === "past") surveys = created.filter(isPastCard);
+  else {
+    const activeCreated: Survey[] = created.filter(
+      (survey: Survey): boolean => !isPastCard(survey),
+    );
+    const activeSeed: Survey[] = getActiveSurveys().filter(isActiveCard);
+    surveys = activeCreated.concat(activeSeed);
+  }
+  if (!category) return surveys;
+  return surveys.filter((survey: Survey): boolean =>
+    matchesCategory(survey.category, category),
   );
-  const activeSeed: Survey[] = getActiveSurveys().filter(isActiveCard);
-  return activeCreated.concat(activeSeed);
 }
 
 /**
@@ -339,4 +350,19 @@ function toSurveyCard(survey: StoredSurvey): Survey {
  */
 function isPastCard(survey: Survey): boolean {
   return Number.isFinite(survey.endsInDays) && survey.endsInDays < 0;
+}
+
+/**
+ * Returns true when a survey category matches the filter value.
+ * @param surveyCategory Category shown on the card.
+ * @param filterCategory Category chosen in the dropdown.
+ * @returns Whether both categories match.
+ */
+function matchesCategory(
+  surveyCategory: string,
+  filterCategory: string,
+): boolean {
+  return (
+    surveyCategory.trim().toLowerCase() === filterCategory.trim().toLowerCase()
+  );
 }

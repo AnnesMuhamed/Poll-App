@@ -13,7 +13,7 @@ export function getEndingSoonSurveys(): Survey[] {
   return [
     {
       id: "soon-team-event",
-      category: "Team activities",
+      category: "Team Activities",
       title: "Let's Plan the Next Team Event Together",
       endsInDays: 1,
     },
@@ -40,37 +40,37 @@ export function getActiveSurveys(): Survey[] {
   return [
     {
       id: "active-team-event",
-      category: "Team activities",
+      category: "Team Activities",
       title: "Let's Plan the Next Team Event Together",
       endsInDays: 1,
     },
     {
       id: "active-gaming-1",
-      category: "Gaming",
+      category: "Gaming & Entertainment",
       title: "Gaming habits and favorite games!",
       endsInDays: 3,
     },
     {
       id: "active-gaming-2",
-      category: "Gaming",
+      category: "Gaming & Entertainment",
       title: "Gaming habits and favorite games!",
       endsInDays: 3,
     },
     {
       id: "active-wellness-1",
-      category: "Healthy Lifestyle",
+      category: "Health & Wellness",
       title: "Healthier future: Fit & wellness survey!",
       endsInDays: 2,
     },
     {
       id: "active-wellness-2",
-      category: "Healthy Lifestyle",
+      category: "Health & Wellness",
       title: "Healthier future: Fit & wellness survey!",
       endsInDays: 2,
     },
     {
       id: "active-team-event-2",
-      category: "Team activities",
+      category: "Team Activities",
       title: "Let's Plan the Next Team Event Together",
       endsInDays: 1,
     },

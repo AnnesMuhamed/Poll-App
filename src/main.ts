@@ -108,15 +108,50 @@ function openSurvey(card: HTMLElement): void {
 }
 
 /**
- * Re-renders the survey grid for the chosen filter tab.
- * @param tab The activated filter tab.
+ * Reads the active Active/Past tab on the home screen.
+ * @returns The current tab filter.
  */
-function applyHomeFilter(tab: HTMLElement): void {
+function getActiveTabFilter(): SurveyFilter {
+  const tab: Element | null = document.querySelector(".tabs__tab--active");
+  if (tab?.getAttribute("data-filter") === "past") return "past";
+  return "active";
+}
+
+/**
+ * Reads the category chosen in the home sort dropdown.
+ * @returns The selected category, or null when none is chosen.
+ */
+function getSelectedListCategory(): string | null {
+  const selected: Element | null = document.querySelector(
+    ".survey-list [data-selected]",
+  );
+  if (!selected || selected.hasAttribute("hidden")) return null;
+  const text: string = selected.textContent?.trim() ?? "";
+  return text === "" ? null : text;
+}
+
+/**
+ * Re-renders the survey grid using the active tab and category filter.
+ */
+function refreshSurveyGrid(): void {
   const grid: Element | null = document.querySelector(".survey-list__grid");
   if (!grid) return;
-  const filter: SurveyFilter =
-    tab.getAttribute("data-filter") === "past" ? "past" : "active";
-  grid.innerHTML = getHomeSurveys(filter).map(renderListCard).join("");
+  const filter: SurveyFilter = getActiveTabFilter();
+  const category: string | null = getSelectedListCategory();
+  grid.innerHTML = getHomeSurveys(
+    filter,
+    category ?? undefined,
+  )
+    .map(renderListCard)
+    .join("");
+}
+
+/**
+ * Re-renders the survey grid for the chosen filter tab.
+ * @param _tab The activated filter tab.
+ */
+function applyHomeFilter(_tab: HTMLElement): void {
+  refreshSurveyGrid();
 }
 
 /**
@@ -168,10 +203,11 @@ function closeSortMenus(): void {
  */
 function selectSortItem(item: HTMLElement): void {
   const menu: Element | null = item.closest(".sort-menu");
+  const category: string | null = item.getAttribute("data-category");
   const selected: Element | null | undefined =
     menu?.querySelector("[data-selected]");
-  if (selected) {
-    selected.textContent = item.textContent;
+  if (selected && category) {
+    selected.textContent = category;
     selected.removeAttribute("hidden");
   }
   menu
@@ -179,6 +215,7 @@ function selectSortItem(item: HTMLElement): void {
     .forEach((el: Element): void => el.classList.remove("sort-menu__item--active"));
   item.classList.add("sort-menu__item--active");
   closeSortMenus();
+  if (item.closest(".survey-list")) refreshSurveyGrid();
 }
 
 /**
