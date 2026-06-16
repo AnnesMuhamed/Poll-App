@@ -2,8 +2,7 @@
  * Composes the complete home screen from its sections.
  */
 
-import { getEndingSoonSurveys } from "../data/seed-surveys";
-import { getHomeSurveys } from "../services/survey-store";
+import { getEndingSoonHomeSurveys, getHomeSurveys } from "../services/survey-store";
 import { renderAppHeader } from "./app-header";
 import { renderHero } from "./hero";
 import { renderEndingSoon } from "./ending-soon";
@@ -22,7 +21,7 @@ export function renderHome(): string {
         ${renderHero()}
         <section class="surveys" aria-labelledby="surveys-title">
           <h2 class="surveys__title" id="surveys-title">Your surveys</h2>
-          ${renderEndingSoon(getEndingSoonSurveys())}
+          ${renderEndingSoon(getEndingSoonHomeSurveys())}
           ${renderSurveyList(getHomeSurveys("active"))}
         </section>
       </main>

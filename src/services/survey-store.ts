@@ -255,6 +255,22 @@ function startOfToday(): number {
   return new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
 }
 
+/** Maximum number of cards shown in the "Ending soon" row. */
+const ENDING_SOON_LIMIT: number = 3;
+
+/**
+ * Returns the three surveys closest to their end date for the home row.
+ * Combines user-created and seed surveys, sorted by remaining days.
+ * @returns Up to three surveys ending soonest.
+ */
+export function getEndingSoonHomeSurveys(): Survey[] {
+  const fromStore: Survey[] = loadSurveys()
+    .filter(isEndingSoonStored)
+    .map(toSurveyCard);
+  const fromSeed: Survey[] = getActiveSurveys().filter(isActiveCard);
+  return sortByEndDate(fromStore.concat(fromSeed)).slice(0, ENDING_SOON_LIMIT);
+}
+
 /**
  * Returns the survey cards shown on the home screen for a filter tab.
  * @param filter The selected filter tab.
@@ -265,10 +281,41 @@ export function getHomeSurveys(filter: SurveyFilter): Survey[] {
     .filter((survey: StoredSurvey): boolean => survey.completed)
     .map(toSurveyCard);
   if (filter === "past") return created.filter(isPastCard);
-  const active: Survey[] = created.filter(
+  const activeCreated: Survey[] = created.filter(
     (survey: Survey): boolean => !isPastCard(survey),
   );
-  return active.concat(getActiveSurveys());
+  const activeSeed: Survey[] = getActiveSurveys().filter(isActiveCard);
+  return activeCreated.concat(activeSeed);
+}
+
+/**
+ * Returns true when a stored survey belongs in the ending-soon row.
+ * @param survey The stored survey to check.
+ * @returns Whether the survey is active and has an end date.
+ */
+function isEndingSoonStored(survey: StoredSurvey): boolean {
+  if (!survey.completed || survey.endDate === "") return false;
+  return !isExpired(survey);
+}
+
+/**
+ * Sorts survey cards by remaining days, earliest end date first.
+ * @param surveys The surveys to sort.
+ * @returns A new sorted array.
+ */
+function sortByEndDate(surveys: Survey[]): Survey[] {
+  return [...surveys].sort(
+    (a: Survey, b: Survey): number => a.endsInDays - b.endsInDays,
+  );
+}
+
+/**
+ * Returns true when a card model represents an active survey.
+ * @param survey The card model to check.
+ * @returns Whether the survey has not expired.
+ */
+function isActiveCard(survey: Survey): boolean {
+  return !Number.isFinite(survey.endsInDays) || survey.endsInDays >= 0;
 }
 
 /**
