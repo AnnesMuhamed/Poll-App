@@ -31,7 +31,7 @@ export function renderSurveyView(survey: StoredSurvey): string {
 }
 
 /**
- * Renders the page header with the logo and the "Create survey" button.
+ * Renders the page header with the logo and the "New survey" button.
  * @returns HTML markup of the header.
  */
 function renderViewHeader(): string {
@@ -40,7 +40,15 @@ function renderViewHeader(): string {
       <a class="brand" href="/" aria-label="Poll App – Home">
         <img class="brand__logo" src="/dark_logo.svg" alt="Poll App" />
       </a>
-      <button type="button" class="create-survey-btn" data-action="new-survey">Create survey</button>
+      <button type="button" class="button button--cta" data-action="new-survey">
+        <span class="button__label">New survey</span>
+        <span class="button__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 8v8M8 12h8" />
+          </svg>
+        </span>
+      </button>
     </header>
   `;
 }

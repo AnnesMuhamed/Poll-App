@@ -1060,23 +1060,6 @@ body.light-page {
   padding: 12px 0 40px;
 }
 
-.create-survey-btn {
-  padding: 12px 20px;
-  border: none;
-  border-radius: 10px;
-  background: #ffcfa1;
-  color: #221227;
-  font-family: "Nokora", var(--font-body);
-  font-weight: 700;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.create-survey-btn:hover {
-  background: #ffb770;
-}
-
 .survey-view {
   display: grid;
   grid-template-columns: minmax(0, 560px) minmax(0, 1fr);
