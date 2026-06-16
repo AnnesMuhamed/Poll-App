@@ -63,7 +63,10 @@ function renderSurveyDetail(survey: StoredSurvey, expired: boolean): string {
   const status: string = expired ? "Expired" : "Published";
   return `
     <article class="survey-detail">
-      <span class="survey-detail__badge">${status}</span>
+      <div class="survey-detail__top">
+        <span class="survey-detail__badge">${status}</span>
+        <button type="button" class="survey-detail__close" data-action="go-home" aria-label="Back to home">✕</button>
+      </div>
       ${renderDetailMeta(survey)}
       <h1 class="survey-detail__title">${escapeHtml(survey.title)}</h1>
       <p class="survey-detail__desc">${escapeHtml(survey.description)}</p>

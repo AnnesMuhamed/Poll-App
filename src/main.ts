@@ -358,6 +358,7 @@ const ACTIONS: Record<string, (element: HTMLElement) => void> = {
   vote: vote,
   "complete-survey": completeSurvey,
   "open-survey": openSurvey,
+  "go-home": (): void => showHome(),
 };
 
 APP_ROOT.addEventListener("click", (event: MouseEvent): void => {

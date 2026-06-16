@@ -1,8 +1,38 @@
 /* Mobile layouts – Home, Survey page, Create survey (see design mockup) */
 
 @media (max-width: 900px) {
+  .hero {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero__content {
+    display: contents;
+  }
+
+  .hero__title {
+    order: 1;
+  }
+
   .hero__media {
-    order: 0;
+    order: 2;
+  }
+
+  .hero__text {
+    order: 3;
+  }
+
+  .hero .button--cta {
+    display: none;
+  }
+
+  .hero__cta-mobile {
+    display: inline-flex;
+    order: 4;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
   }
 
   .survey-view {
@@ -25,6 +55,11 @@
 
   .survey-page__header .button--cta {
     display: none;
+  }
+
+  .survey-detail__close {
+    display: inline-flex;
+    margin-right: 10px;
   }
 
   .modal {
@@ -185,6 +220,10 @@
   .survey-detail {
     padding: 24px 18px;
     border-top-right-radius: 80px;
+  }
+
+  .survey-detail__close {
+    margin-right: 14px;
   }
 
   .survey-detail__title {

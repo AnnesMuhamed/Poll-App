@@ -26,6 +26,9 @@ export function renderHero(): string {
             </svg>
           </span>
         </button>
+        <button type="button" class="hero__cta-mobile" data-action="new-survey" aria-label="New survey">
+          <img class="hero__cta-mobile-img" src="/add_new_survey_btn.svg" alt="" width="172" height="48" />
+        </button>
       </div>
       <div class="hero__media">
         <div class="hero__phone">

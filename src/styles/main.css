@@ -117,6 +117,17 @@ h4 {
   max-width: 440px;
 }
 
+.hero__cta-mobile {
+  display: none;
+}
+
+.hero__cta-mobile-img {
+  display: block;
+  width: 172px;
+  max-width: 100%;
+  height: auto;
+}
+
 .hero__image {
   position: relative;
   z-index: 1;
@@ -1081,6 +1092,15 @@ body.light-page {
   overflow: hidden;
 }
 
+.survey-detail__top {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+
 .survey-detail__badge {
   flex-shrink: 0;
   align-self: flex-start;
@@ -1093,6 +1113,30 @@ body.light-page {
   font-weight: 600;
   font-size: 14px;
   color: #221227;
+}
+
+.survey-detail__close {
+  display: none;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: #ffb7704d;
+  color: #35273a;
+  font-family: "Mulish", var(--font-body);
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.survey-detail__close:hover {
+  background: #ffb77080;
 }
 
 .survey-detail__meta {
@@ -1342,11 +1386,6 @@ body.light-page {
   .survey-view,
   .survey-detail__questions {
     grid-template-columns: 1fr;
-  }
-
-  .hero__media {
-    order: -1;
-    min-height: 200px;
   }
 
   .ending-card {
