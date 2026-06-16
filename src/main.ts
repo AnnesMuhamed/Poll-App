@@ -4,6 +4,7 @@
 
 import "./styles/main.css";
 import "./styles/publish-toast.css";
+import "./styles/mobile.css";
 import { renderHome } from "./components/home";
 import { renderSurveyView } from "./components/survey-view";
 import { showPublishToast } from "./components/publish-toast";

@@ -1,0 +1,263 @@
+/* Mobile layouts – Home, Survey page, Create survey (see design mockup) */
+
+@media (max-width: 900px) {
+  .hero__media {
+    order: 0;
+  }
+
+  .survey-view {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 32px;
+  }
+
+  .survey-detail,
+  .survey-results {
+    width: 100%;
+    max-width: none;
+    max-height: none;
+  }
+
+  .survey-detail__questions {
+    overflow-y: visible;
+  }
+
+  .modal {
+    padding: 12px;
+    align-items: flex-start;
+  }
+
+  .modal__panel {
+    width: 100%;
+    height: auto;
+    max-height: calc(100vh - 24px);
+    padding: 28px 20px 24px;
+    gap: 24px;
+  }
+
+  .modal__title {
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 560px) {
+  .page,
+  .survey-page {
+    width: min(1218px, 100% - 32px);
+    padding: 16px 0 48px;
+  }
+
+  .app-header {
+    padding: 8px 0 16px;
+  }
+
+  .brand__logo {
+    height: 36px;
+  }
+
+  .hero {
+    gap: 24px;
+    padding: 8px 0 40px;
+  }
+
+  .hero__title {
+    font-size: 56px;
+    line-height: 52px;
+    margin-bottom: 16px;
+  }
+
+  .hero__text {
+    height: auto;
+    font-size: 18px;
+    line-height: 1.25;
+    margin-bottom: 20px;
+  }
+
+  .hero__phone {
+    max-width: 280px;
+  }
+
+  .button--cta:hover {
+    width: 138px;
+  }
+
+  .surveys__title {
+    font-size: 44px;
+    height: auto;
+    margin: 8px auto 28px;
+  }
+
+  .ending-soon {
+    margin-bottom: 28px;
+  }
+
+  .ending-soon__title {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  .ending-soon__grid {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .ending-soon__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ending-card {
+    flex: 0 0 min(260px, 78vw);
+    width: auto;
+    height: 240px;
+    padding: 28px 16px;
+    scroll-snap-align: start;
+  }
+
+  .ending-card__title {
+    font-size: 22px;
+  }
+
+  .survey-list__toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .sort-menu,
+  .sort {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .survey-list__grid {
+    max-height: none;
+    overflow-y: visible;
+    padding-right: 0;
+  }
+
+  .list-card {
+    width: 100%;
+    height: auto;
+    min-height: 127px;
+  }
+
+  .list-card__title {
+    max-height: none;
+    font-size: 20px;
+  }
+
+  .survey-page__header {
+    padding: 8px 0 24px;
+    gap: 12px;
+  }
+
+  .survey-page__header .button--cta {
+    width: auto;
+    min-width: 118px;
+    height: 40px;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .survey-page__header .button--cta:hover {
+    width: auto;
+    min-width: 118px;
+  }
+
+  .survey-detail {
+    padding: 24px 18px;
+    border-top-right-radius: 80px;
+  }
+
+  .survey-detail__title {
+    font-size: 32px;
+  }
+
+  .survey-detail__meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .survey-detail__footer {
+    justify-content: stretch;
+  }
+
+  .complete-btn {
+    width: 100%;
+  }
+
+  .survey-results__title {
+    font-size: 28px;
+  }
+
+  .modal {
+    padding: 0;
+    align-items: stretch;
+  }
+
+  .modal__panel {
+    min-height: 100vh;
+    max-height: none;
+    padding: 20px 16px 24px;
+    border-radius: 0;
+    border-top-right-radius: 72px;
+    box-shadow: none;
+  }
+
+  .modal__title {
+    font-size: 36px;
+  }
+
+  .modal__cancel {
+    width: auto;
+    min-width: 96px;
+    height: 36px;
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+
+  .modal__body {
+    padding: 16px;
+    border-top-right-radius: 48px;
+  }
+
+  .field__label {
+    font-size: 16px;
+  }
+
+  .field__control--narrow {
+    max-width: none;
+  }
+
+  .field__head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .modal__footer {
+    justify-content: stretch;
+  }
+
+  .publish-btn {
+    width: 100%;
+  }
+
+  .publish-toast {
+    width: calc(100vw - 32px);
+    padding: 16px 20px;
+    gap: 20px;
+    border-top-right-radius: 72px;
+  }
+
+  .publish-toast__text {
+    font-size: 18px;
+  }
+}
