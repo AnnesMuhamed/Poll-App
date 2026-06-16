@@ -23,6 +23,10 @@
     overflow-y: visible;
   }
 
+  .survey-page__header .button--cta {
+    display: none;
+  }
+
   .modal {
     padding: 12px;
     align-items: flex-start;
@@ -38,6 +42,26 @@
 
   .modal__title {
     font-size: 40px;
+  }
+
+  .modal__head {
+    align-items: flex-start;
+  }
+
+  .modal__cancel {
+    align-self: flex-start;
+    width: 26px;
+    min-width: 26px;
+    height: 26px;
+    margin-top: 2px;
+    margin-right: 10px;
+    padding: 0;
+    gap: 0;
+    border-radius: 8px;
+  }
+
+  .modal__cancel-label {
+    display: none;
   }
 }
 
@@ -158,19 +182,6 @@
     gap: 12px;
   }
 
-  .survey-page__header .button--cta {
-    width: auto;
-    min-width: 118px;
-    height: 40px;
-    padding: 8px 12px;
-    font-size: 14px;
-  }
-
-  .survey-page__header .button--cta:hover {
-    width: auto;
-    min-width: 118px;
-  }
-
   .survey-detail {
     padding: 24px 18px;
     border-top-right-radius: 80px;
@@ -216,12 +227,13 @@
     font-size: 36px;
   }
 
+  .modal__cancel-x {
+    font-size: 13px;
+    line-height: 1;
+  }
+
   .modal__cancel {
-    width: auto;
-    min-width: 96px;
-    height: 36px;
-    padding: 6px 10px;
-    font-size: 14px;
+    margin-right: 14px;
   }
 
   .modal__body {

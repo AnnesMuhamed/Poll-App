@@ -60,8 +60,8 @@ function renderHeader(): string {
         <span class="modal__badge">Draft</span>
         <h2 class="modal__title" id="create-survey-title">Create new survey</h2>
       </div>
-      <button type="button" class="modal__cancel" data-action="close-dialog">
-        <span>Cancel</span>
+      <button type="button" class="modal__cancel" data-action="close-dialog" aria-label="Cancel">
+        <span class="modal__cancel-label">Cancel</span>
         <span class="modal__cancel-x" aria-hidden="true">✕</span>
       </button>
     </div>
