@@ -3,8 +3,10 @@
  */
 
 import "./styles/main.css";
+import "./styles/publish-toast.css";
 import { renderHome } from "./components/home";
 import { renderSurveyView } from "./components/survey-view";
+import { showPublishToast } from "./components/publish-toast";
 import { renderListCard } from "./components/survey-card";
 import {
   buildQuestion,
@@ -55,8 +57,10 @@ function publishSurvey(): void {
   const form: CreatedSurvey = readCreateSurveyForm();
   const survey: StoredSurvey = createStoredSurvey(form);
   upsertSurvey(survey);
-  closeModal();
-  showSurvey(survey);
+  showPublishToast((): void => {
+    closeModal();
+    showSurvey(survey);
+  });
 }
 
 /**

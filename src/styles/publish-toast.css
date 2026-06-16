@@ -1,0 +1,75 @@
+/* Publish success toast – enters from viewport right, lands on publish button */
+.publish-toast-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+}
+
+.publish-toast {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  width: min(420px, calc(100vw - 48px));
+  padding: 18px 28px;
+  background: #ffcfa1;
+  border-radius: 8px;
+  border-top-right-radius: 100px;
+  transform: translate(var(--toast-start-x, 120vw), -50%);
+  transition: transform 0.45s ease-out, opacity 0.35s ease;
+  pointer-events: auto;
+}
+
+.publish-toast--visible {
+  transform: translate(0, -50%);
+}
+
+.publish-toast--leaving {
+  opacity: 0;
+}
+
+.publish-toast__text {
+  margin: 0;
+  font-family: "Mulish", var(--font-body);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.2;
+  color: #35273a;
+}
+
+.publish-toast__close {
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border: none;
+  background: transparent;
+  font-family: "Mulish", var(--font-body);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1;
+  color: #35273a;
+  cursor: pointer;
+}
+
+.publish-toast__close:hover {
+  opacity: 0.75;
+}
+
+.publish-btn--hidden {
+  visibility: hidden;
+}
+
+.modal--publish-success {
+  pointer-events: none;
+}
+
+.modal--publish-success .publish-toast,
+.modal--publish-success .publish-toast__close {
+  pointer-events: auto;
+}
+
+.modal--leaving {
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
