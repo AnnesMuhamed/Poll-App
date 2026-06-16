@@ -3,6 +3,18 @@
  */
 
 /**
+ * Returns today's date as an ISO string (yyyy-mm-dd).
+ * @returns Today's date in local time.
+ */
+export function todayIsoDate(): string {
+  const now: Date = new Date();
+  const year: number = now.getFullYear();
+  const month: string = String(now.getMonth() + 1).padStart(2, "0");
+  const day: string = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+/**
  * Builds the "Ends in X Day(s)" label for a survey.
  * @param days Remaining days until the deadline.
  * @returns Human-readable end label.

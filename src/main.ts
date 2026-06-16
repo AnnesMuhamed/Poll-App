@@ -14,6 +14,7 @@ import {
   renderCreateSurveyDialog,
   readCreateSurveyForm,
   isCreateSurveyFormValid,
+  updateEndDateField,
   updatePublishButton,
 } from "./components/create-survey-dialog";
 import type { CreatedSurvey, StoredSurvey, SurveyFilter } from "./types/survey";
@@ -228,6 +229,7 @@ function selectSortItem(item: HTMLElement): void {
 function openModal(): void {
   document.querySelector("[data-modal]")?.removeAttribute("hidden");
   document.body.classList.add("modal-open");
+  updateEndDateField();
   updatePublishButton();
 }
 
@@ -386,6 +388,7 @@ APP_ROOT.addEventListener("click", (event: MouseEvent): void => {
 APP_ROOT.addEventListener("input", (event: Event): void => {
   const target: HTMLElement = event.target as HTMLElement;
   if (!target.closest("[data-modal]")) return;
+  if ((target as HTMLInputElement).id === "survey-end") updateEndDateField();
   updatePublishButton();
 });
 

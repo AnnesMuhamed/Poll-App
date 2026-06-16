@@ -4,6 +4,7 @@
  */
 
 import { CATEGORIES } from "../data/categories";
+import { todayIsoDate } from "../utils/format";
 import type {
   CreatedSurvey,
   CreatedQuestion,
@@ -95,7 +96,7 @@ function renderDateField(): string {
         ${renderCategoryMenu()}
       </div>
       <div class="field__control field__control--narrow">
-        <input class="input" id="survey-end" type="date" />
+        <input class="input" id="survey-end" type="date" min="${todayIsoDate()}" />
         ${renderTrash("input", "Clear end date")}
       </div>
     </div>
@@ -274,11 +275,34 @@ function renderTrash(target: string, label: string): string {
 export function readCreateSurveyForm(): CreatedSurvey {
   return {
     title: readFieldValue("survey-name"),
-    endDate: readFieldValue("survey-end"),
+    endDate: readEndDate(),
     description: readFieldValue("survey-desc"),
     category: readSelectedCategory(),
     questions: readQuestions(),
   };
+}
+
+/**
+ * Refreshes the end-date minimum and clears values in the past.
+ */
+export function updateEndDateField(): void {
+  const field: HTMLInputElement | null = document.getElementById(
+    "survey-end",
+  ) as HTMLInputElement | null;
+  if (!field) return;
+  const min: string = todayIsoDate();
+  field.min = min;
+  if (field.value !== "" && field.value < min) field.value = "";
+}
+
+/**
+ * Reads the end date when it is today or in the future.
+ * @returns A valid ISO date, or an empty string.
+ */
+function readEndDate(): string {
+  const value: string = readFieldValue("survey-end");
+  if (value === "" || value < todayIsoDate()) return "";
+  return value;
 }
 
 /**
