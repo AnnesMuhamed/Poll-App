@@ -63,3 +63,9 @@ function getUser(id: string): User {
 ### Clean Code
 - Lesbare Bedingungen: `if (isUserActive)` statt `if (x)`.
 - HTML in eigene Render-Funktionen auslagern, nicht inline verstreuen.
+
+## Dateigröße
+
+- **Keine Datei darf mehr als 400 Zeilen Code enthalten.**
+- Wird diese Grenze erreicht, muss der Code in eine neue Datei ausgelagert werden
+  (z. B. CSS in thematische Stylesheets, Logik in eigene Module/Komponenten).
