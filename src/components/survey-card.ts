@@ -44,8 +44,10 @@ export function renderListCard(survey: Survey): string {
       data-survey-id="${escapeHtml(survey.id)}"
       aria-label="${escapeHtml(survey.title)} – open survey"
     >
-      <p class="list-card__category">${escapeHtml(survey.category)}</p>
-      <h4 class="list-card__title">${escapeHtml(survey.title)}</h4>
+      <div class="list-card__body">
+        <p class="list-card__category">${escapeHtml(survey.category)}</p>
+        <h4 class="list-card__title">${escapeHtml(survey.title)}</h4>
+      </div>
       <span class="list-card__badge">${formatEndsIn(survey.endsInDays)}</span>
     </article>
   `;

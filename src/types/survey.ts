@@ -34,3 +34,29 @@ export interface CreatedSurvey {
   description: string;
   questions: CreatedQuestion[];
 }
+
+/** An answer option of a stored survey including its vote counter. */
+export interface StoredAnswer {
+  letter: string;
+  text: string;
+  votes: number;
+}
+
+/** A question of a stored survey including its answers. */
+export interface StoredQuestion {
+  title: string;
+  allowMultiple: boolean;
+  answers: StoredAnswer[];
+}
+
+/** A survey persisted in localStorage with live vote tallies. */
+export interface StoredSurvey {
+  id: string;
+  title: string;
+  category: string;
+  endDate: string;
+  description: string;
+  questions: StoredQuestion[];
+  selections: string[];
+  completed: boolean;
+}

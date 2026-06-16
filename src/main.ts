@@ -5,13 +5,24 @@
 import "./styles/main.css";
 import { renderHome } from "./components/home";
 import { renderSurveyView } from "./components/survey-view";
+import { renderListCard } from "./components/survey-card";
 import {
   buildQuestion,
   renderAnswerRow,
   renderCreateSurveyDialog,
   readCreateSurveyForm,
+  isCreateSurveyFormValid,
+  updatePublishButton,
 } from "./components/create-survey-dialog";
-import type { CreatedSurvey } from "./types/survey";
+import type { CreatedSurvey, StoredSurvey, SurveyFilter } from "./types/survey";
+import {
+  createStoredSurvey,
+  getSurvey,
+  upsertSurvey,
+  toggleVote,
+  isExpired,
+  getHomeSurveys,
+} from "./services/survey-store";
 import { requireElement } from "./utils/dom";
 
 const APP_ROOT: HTMLElement = requireElement("app");
@@ -27,22 +38,85 @@ function showHome(): void {
 }
 
 /**
- * Renders the published survey on a light page. The dialog markup is added
+ * Renders a stored survey on a light page. The dialog markup is added
  * again so the "Create survey" button keeps working from this view.
  * @param survey The survey to display.
  */
-function showSurvey(survey: CreatedSurvey): void {
+function showSurvey(survey: StoredSurvey): void {
   document.body.classList.add("light-page");
   APP_ROOT.innerHTML = renderSurveyView(survey) + renderCreateSurveyDialog();
 }
 
 /**
- * Reads the dialog form, closes it and shows the created survey.
+ * Reads the dialog form, stores the survey and shows its live view.
  */
 function publishSurvey(): void {
-  const survey: CreatedSurvey = readCreateSurveyForm();
+  if (!isCreateSurveyFormValid()) return;
+  const form: CreatedSurvey = readCreateSurveyForm();
+  const survey: StoredSurvey = createStoredSurvey(form);
+  upsertSurvey(survey);
   closeModal();
   showSurvey(survey);
+}
+
+/**
+ * Reads the survey id of the currently shown survey view.
+ * @returns The survey id, or null when none is shown.
+ */
+function currentSurveyId(): string | null {
+  return document
+    .querySelector("[data-survey-id]")
+    ?.getAttribute("data-survey-id") ?? null;
+}
+
+/**
+ * Applies a vote for the clicked answer and refreshes the view.
+ * @param button The clicked answer checkbox.
+ */
+function vote(button: HTMLElement): void {
+  const survey: StoredSurvey | undefined = getSurvey(currentSurveyId() ?? "");
+  if (!survey || isExpired(survey)) return;
+  const qIndex: number = Number(button.getAttribute("data-q"));
+  const letter: string | null = button.getAttribute("data-letter");
+  if (!letter) return;
+  toggleVote(survey, qIndex, letter);
+  upsertSurvey(survey);
+  showSurvey(survey);
+}
+
+/**
+ * Marks the current survey as completed and returns to the home screen.
+ */
+function completeSurvey(): void {
+  const survey: StoredSurvey | undefined = getSurvey(currentSurveyId() ?? "");
+  if (survey) {
+    survey.completed = true;
+    upsertSurvey(survey);
+  }
+  showHome();
+}
+
+/**
+ * Opens a stored survey from its home card. Seed cards are ignored.
+ * @param card The clicked survey card.
+ */
+function openSurvey(card: HTMLElement): void {
+  const survey: StoredSurvey | undefined = getSurvey(
+    card.getAttribute("data-survey-id") ?? "",
+  );
+  if (survey) showSurvey(survey);
+}
+
+/**
+ * Re-renders the survey grid for the chosen filter tab.
+ * @param tab The activated filter tab.
+ */
+function applyHomeFilter(tab: HTMLElement): void {
+  const grid: Element | null = document.querySelector(".survey-list__grid");
+  if (!grid) return;
+  const filter: SurveyFilter =
+    tab.getAttribute("data-filter") === "past" ? "past" : "active";
+  grid.innerHTML = getHomeSurveys(filter).map(renderListCard).join("");
 }
 
 /**
@@ -113,6 +187,7 @@ function selectSortItem(item: HTMLElement): void {
 function openModal(): void {
   document.querySelector("[data-modal]")?.removeAttribute("hidden");
   document.body.classList.add("modal-open");
+  updatePublishButton();
 }
 
 /**
@@ -136,6 +211,7 @@ function addAnswer(button: HTMLElement): void {
     "A".charCodeAt(0) + list.children.length,
   );
   list.insertAdjacentHTML("beforeend", renderAnswerRow(letter));
+  updatePublishButton();
 }
 
 /**
@@ -148,6 +224,7 @@ function addQuestion(): void {
   const button: Element | null = container.querySelector(".add-question");
   if (button) button.insertAdjacentHTML("beforebegin", buildQuestion(next));
   else container.insertAdjacentHTML("beforeend", buildQuestion(next));
+  updatePublishButton();
 }
 
 /**
@@ -170,16 +247,19 @@ function deleteField(trash: HTMLElement): void {
   const target: string | null = trash.getAttribute("data-target");
   if (target === "answer") {
     trash.closest(".answer-row")?.remove();
+    updatePublishButton();
     return;
   }
   if (target === "question") {
     removeQuestion(trash);
+    updatePublishButton();
     return;
   }
   const input: HTMLInputElement | null | undefined = trash
     .closest(".field")
     ?.querySelector("input, textarea");
   if (input) input.value = "";
+  updatePublishButton();
 }
 
 /**
@@ -231,6 +311,9 @@ const ACTIONS: Record<string, (element: HTMLElement) => void> = {
   "delete-field": deleteField,
   "toggle-check": toggleCheck,
   publish: publishSurvey,
+  vote: vote,
+  "complete-survey": completeSurvey,
+  "open-survey": openSurvey,
 };
 
 APP_ROOT.addEventListener("click", (event: MouseEvent): void => {
@@ -238,6 +321,7 @@ APP_ROOT.addEventListener("click", (event: MouseEvent): void => {
   const tab: HTMLElement | null = target.closest(".tabs__tab");
   if (tab) {
     activateTab(tab);
+    applyHomeFilter(tab);
     return;
   }
   const actionEl: HTMLElement | null = target.closest("[data-action]");
@@ -256,6 +340,12 @@ APP_ROOT.addEventListener("click", (event: MouseEvent): void => {
     return;
   }
   closeSortMenus();
+});
+
+APP_ROOT.addEventListener("input", (event: Event): void => {
+  const target: HTMLElement = event.target as HTMLElement;
+  if (!target.closest("[data-modal]")) return;
+  updatePublishButton();
 });
 
 document.addEventListener("keydown", (event: KeyboardEvent): void => {

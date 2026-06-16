@@ -250,7 +250,7 @@ function renderAddQuestionButton(): string {
 function renderFooter(): string {
   return `
     <div class="modal__footer">
-      <button type="button" class="publish-btn" data-action="publish">Publish</button>
+      <button type="button" class="publish-btn" data-action="publish" disabled>Publish</button>
     </div>
   `;
 }
@@ -352,4 +352,39 @@ function readAnswers(block: Element): CreatedAnswer[] {
 function toAnswer(text: string, index: number): CreatedAnswer {
   const letter: string = String.fromCharCode("A".charCodeAt(0) + index);
   return { letter, text };
+}
+
+/**
+ * Returns true when required fields are filled: survey name,
+ * at least one question, and at least one answer on that question.
+ * Optional fields (end date, describing text) are not checked.
+ * @returns Whether the form can be published.
+ */
+export function isCreateSurveyFormValid(): boolean {
+  if (readFieldValue("survey-name") === "") return false;
+  return hasQuestionWithAnswers();
+}
+
+/**
+ * Returns true when at least one question has text and one answer.
+ * @returns Whether a valid question exists.
+ */
+function hasQuestionWithAnswers(): boolean {
+  const blocks: NodeListOf<Element> =
+    document.querySelectorAll("[data-modal] .question");
+  return Array.from(blocks).some((block: Element): boolean => {
+    const question: CreatedQuestion = readQuestion(block);
+    return question.title !== "" && question.answers.length > 0;
+  });
+}
+
+/**
+ * Enables or disables the publish button based on form validation.
+ */
+export function updatePublishButton(): void {
+  const button: HTMLButtonElement | null = document.querySelector(
+    "[data-modal] .publish-btn",
+  );
+  if (!button) return;
+  button.disabled = !isCreateSurveyFormValid();
 }
