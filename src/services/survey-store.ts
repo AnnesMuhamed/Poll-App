@@ -13,7 +13,6 @@ import type {
   StoredQuestion,
   StoredAnswer,
 } from "../types/survey";
-import { getActiveSurveys } from "../data/seed-surveys";
 
 /** localStorage key under which all surveys are stored. */
 const STORAGE_KEY: string = "poll-app:surveys";
@@ -264,11 +263,9 @@ const ENDING_SOON_LIMIT: number = 3;
  * @returns Up to three surveys ending soonest.
  */
 export function getEndingSoonHomeSurveys(): Survey[] {
-  const fromStore: Survey[] = loadSurveys()
-    .filter(isEndingSoonStored)
-    .map(toSurveyCard);
-  const fromSeed: Survey[] = getActiveSurveys().filter(isActiveCard);
-  return sortByEndDate(fromStore.concat(fromSeed)).slice(0, ENDING_SOON_LIMIT);
+  return sortByEndDate(
+    loadSurveys().filter(isEndingSoonStored).map(toSurveyCard),
+  ).slice(0, ENDING_SOON_LIMIT);
 }
 
 /**
@@ -287,11 +284,9 @@ export function getHomeSurveys(
   let surveys: Survey[];
   if (filter === "past") surveys = created.filter(isPastCard);
   else {
-    const activeCreated: Survey[] = created.filter(
+    surveys = created.filter(
       (survey: Survey): boolean => !isPastCard(survey),
     );
-    const activeSeed: Survey[] = getActiveSurveys().filter(isActiveCard);
-    surveys = activeCreated.concat(activeSeed);
   }
   if (!category) return surveys;
   return surveys.filter((survey: Survey): boolean =>
@@ -318,15 +313,6 @@ function sortByEndDate(surveys: Survey[]): Survey[] {
   return [...surveys].sort(
     (a: Survey, b: Survey): number => a.endsInDays - b.endsInDays,
   );
-}
-
-/**
- * Returns true when a card model represents an active survey.
- * @param survey The card model to check.
- * @returns Whether the survey has not expired.
- */
-function isActiveCard(survey: Survey): boolean {
-  return !Number.isFinite(survey.endsInDays) || survey.endsInDays >= 0;
 }
 
 /**

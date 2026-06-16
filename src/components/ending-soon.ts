@@ -11,6 +11,7 @@ import { renderEndingCard } from "./survey-card";
  * @returns HTML markup of the section.
  */
 export function renderEndingSoon(surveys: Survey[]): string {
+  if (surveys.length === 0) return "";
   const cards: string = surveys.map(renderEndingCard).join("");
   return `
     <section class="ending-soon" aria-labelledby="ending-soon-title">
